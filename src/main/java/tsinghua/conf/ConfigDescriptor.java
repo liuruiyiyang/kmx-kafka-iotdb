@@ -120,6 +120,7 @@ public class ConfigDescriptor {
 				config.QUERY_SLIMIT_OFFSET = Integer.parseInt(properties.getProperty("QUERY_SLIMIT_OFFSET", config.QUERY_SLIMIT_OFFSET+""));
 				config.CREATE_SCHEMA = Boolean.parseBoolean(properties.getProperty("CREATE_SCHEMA", config.CREATE_SCHEMA+""));
 				config.TOPIC = properties.getProperty("TOPIC", config.TOPIC);
+				config.TIME_FORMAT = properties.getProperty("TIME_FORMAT", config.TIME_FORMAT);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

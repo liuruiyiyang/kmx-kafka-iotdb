@@ -13,10 +13,10 @@ import tsinghua.conf.ConfigDescriptor;
 import tsinghua.db.IoTDB;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class KConsumer extends Thread {
     private String topic;
@@ -78,10 +78,21 @@ public class KConsumer extends Thread {
                 Map<String, Object> sensorMap = null;
                 long timestamp = -1;
                 try {
+                    timestamp = JSON.parseObject(message).getLong(TIMESTAMP);
+                } catch (Exception e) {
+                    //logger.warn("timestamp非long类型尝试解析字符串");
+                    try {
+                        String timestampString = JSON.parseObject(message).getString(TIMESTAMP);
+                        timestamp = dealDateFormat(timestampString);
+                    } catch (Exception ex){
+                        logger.error("timestamp格式错误无法解析");
+                        ex.printStackTrace();
+                    }
+                }
+                try {
                     tenant = JSON.parseObject(message).getString(TENANT);
                     user = JSON.parseObject(message).getString(USER);
                     tsTable = JSON.parseObject(message).getString(TSTABLE);
-                    timestamp = JSON.parseObject(message).getLong(TIMESTAMP);
                     tagMap = (Map<String, String>) JSON.parseObject(message).get(TAGS);
                     sensorMap = (Map<String, Object>) JSON.parseObject(message).get(SENSORS);
                 } catch (Exception e){
@@ -107,6 +118,17 @@ public class KConsumer extends Thread {
             }
         }
 
+    }
+
+    /**
+     * 日期格式转换yyyy-MM-dd'T'HH:mm:ss.SSSXXX  (yyyy-MM-dd'T'HH:mm:ss.SSSZ) TO  timestamp (long)
+     * @throws ParseException
+     */
+    public long dealDateFormat(String oldDateStr) throws ParseException {
+        //此格式只有  jdk 1.7才支持  yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+        DateFormat df = new SimpleDateFormat(config.TIME_FORMAT);//yyyy-MM-dd'T'HH:mm:ss.SSSZ
+        Date date = df.parse(oldDateStr);
+        return date.getTime();
     }
 
     private String createInsertSQL(String path, Map sensorMap, long timestamp){

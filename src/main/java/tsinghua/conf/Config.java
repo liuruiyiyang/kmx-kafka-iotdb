@@ -14,6 +14,7 @@ public class Config {
 	public String host="192.168.130.20";
 	public String port="6667";
 	public String TOPIC="test2";
+	public String TIME_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 	/** 设备数量 */
 	public int DEVICE_NUMBER = 2;
 	/** 测试客户端线程数量 */
