@@ -1,4 +1,4 @@
-# json-kafka
+# kmx-kafka-iotdb
 
 This repo is to consume JSON from Kafka and send the converted SQL to IoTDB.
 
