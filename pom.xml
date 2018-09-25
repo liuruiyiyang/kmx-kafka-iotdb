@@ -17,7 +17,7 @@
       </plugin>
     </plugins>
   </build>
-  <name>kafka2iotdb</name>
+  <name>kmx-kafka-iotdb</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
